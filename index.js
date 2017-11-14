@@ -21,6 +21,7 @@ class ServerlessPlugin {
 
     this.hooks = {
       'endpoints:set:set': this.setEndpointType.bind(this),
+      'before:aws:deploy:finalize:cleanup': this.updateAfterDeploy.bind(this)
     };
   }
   
@@ -32,6 +33,20 @@ class ServerlessPlugin {
     if (['REGIONAL', 'EDGE'].indexOf(this.endpointType) == -1 ) {
       throw new Error(`Endpoint type is ${this.endpointType}. Must be REGIONAL or EDGE`);
     }
+  }
+
+  shouldUpdateOnDeploy() {
+    if (this.serverless.service.custom && this.serverless.service.custom.endpoint && this.serverless.service.custom.endpoint.updateOnDeploy === false ) {
+      return false;
+    };
+    return true;
+  }
+
+  updateAfterDeploy() {
+    if (!this.shouldUpdateOnDeploy() ) {
+      return
+    }
+    this.setEndpointType();
   }
 
   setEndpointType() {

@@ -21,9 +21,23 @@ AWS recently announced [regional API endpoints](https://aws.amazon.com/about-aws
   custom:
       endpoint:
         type: 'REGIONAL'
+        updateOnDeploy: true # Default is true
   ```
 
-3. Run `sls endpoint set` to set your endpoint configuration!
+3. Run `sls deploy` to deploy your application with your configured endpoint!
+
+# Configuration
+
+By default, it will update the endpoint configuration after a deploy. If you prefer more granular control, you can set `updateOnDeploy: false` in your `serverless.yml`:
+
+```yml
+custom:
+  endpoint:
+    type: 'REGIONAL'
+    updateOnDeploy: false
+```
+
+Then you can run `sls endpoints set` to manually update your endpoint configuration.
 
 # Limitations
 
